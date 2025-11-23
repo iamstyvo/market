@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product - Inzozi Shop</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="dashboard.html">Admin</a></li>
+                    <li><a href="../cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Inzozi Shop Product Upload</h2>
+            <p>Add new items to your inventory</p>
+        </section>
+
+        <section class="login-container">
+            <h2>Upload New Product</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" name="productName" required placeholder="Enter product name">
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price (USD):</label>
+                    <input type="number" id="product-price" name="productPrice" step="0.01" required placeholder="Enter price in USD">
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category:</label>
+                    <select id="product-category" name="productCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothes">Clothes</option>
+                        <option value="shoes">Shoes</option>
+                        <option value="toys">Toys</option>
+                        <option value="secondhand">Second Hand</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Image URL:</label>
+                    <input type="text" id="product-image" name="productImage" placeholder="e.g., images/product.jpg" required>
+                </div>
+                <button type="button" class="btn" onclick="uploadProduct()">Upload Product</button>
+            </form>
+            
+            <div id="upload-status"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        // Check admin auth
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+        });
+        
+        // Upload product function
+        function uploadProduct() {
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const category = document.getElementById('product-category').value;
+            const image = document.getElementById('product-image').value;
+            
+            if (!name || !price || !category || !image) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Get existing products from localStorage
+            let storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+            
+            // Generate a unique ID for the new product
+            const newId = storedProducts.length > 0 ? Math.max(...storedProducts.map(p => p.id)) + 1 : 1;
+            
+            // Create new product object
+            const newProduct = {
+                id: newId,
+                name: name,
+                price: parseFloat(price),
+                category: category,
+                image: image
+            };
+            
+            // Add new product to the array
+            storedProducts.push(newProduct);
+            
+            // Save updated products to localStorage
+            localStorage.setItem('products', JSON.stringify(storedProducts));
+            
+            // Show success message
+            const statusDiv = document.getElementById('upload-status');
+            statusDiv.innerHTML = `
+                <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <strong>Success!</strong> Product "${name}" has been uploaded to the ${category} category.
+                </div>
+            `;
+            
+            // Reset form
+            document.getElementById('upload-form').reset();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inzozi Shop - Online Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin/login.html">Admin</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Welcome to Inzozi Shop</h2>
+            <p>Your one-stop shop for electronics, clothes, shoes, toys, and second-hand items</p>
+            <button class="btn" onclick="window.location.href='#categories'" style="background: linear-gradient(90deg, #2ecc71, #1abc9c); border: none; padding: 15px 30px; border-radius: 30px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);">Shop Now</button>
+        </section>
+
+        <section class="search-section">
+            <div class="container">
+                <h2>Search Products</h2>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search products...">
+                    <button onclick="searchProducts()">Search</button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+        </section>
+
+        <section class="categories" id="categories">
+            <div class="container">
+                <h2>Shop by Category</h2>
+                <div class="category-grid">
+                    <div class="category-item">
+                        <a href="categories/electronics.html">
+                            
+                            <h3>📱 Electronics</h3>
+                            <p id="electronics-count">0 products</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="categories/clothes.html">
+                            
+                            <h3>👕 Clothes</h3>
+                            <p id="clothes-count">0 products</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="categories/shoes.html">
+                            <img src="images/shoes.jpg" alt="Shoes">
+                            <h3>👟 Shoes</h3>
+                            <p id="shoes-count">0 products</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="categories/toys.html">
+                            
+                            <h3>🧸 Toys</h3>
+                            <p id="toys-count">0 products</p>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="categories/secondhand.html">
+                           
+                            <h3>🔄 Second Hand</h3>
+                            <p id="secondhand-count">0 products</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-products">
+            <div class="container">
+                <h2>Latest Products</h2>
+                <div id="latest-products" class="product-grid">
+                    <!-- Latest products will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Search products function for homepage
+        function searchProducts() {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const searchResults = document.getElementById('search-results');
+            
+            if (searchTerm.trim() === '') {
+                searchResults.innerHTML = '';
+                return;
+            }
+            
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) || 
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredProducts.length === 0) {
+                searchResults.innerHTML = '<p>No products found</p>';
+                return;
+            }
+            
+            let resultsHTML = '<div class="product-grid">';
+            
+            filteredProducts.forEach(product => {
+                // Convert price to RWF (using conversion rate from script.js)
+                const priceInRwf = (product.price * 1200).toFixed(0);
+                resultsHTML += `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p class="price">${priceInRwf} RWF</p>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsHTML += '</div>';
+            searchResults.innerHTML = resultsHTML;
+        }
+        
+        // Display latest products
+        function displayLatestProducts() {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            const latestProductsContainer = document.getElementById('latest-products');
+            
+            if (products.length === 0) {
+                latestProductsContainer.innerHTML = '<p>No products available. Admin can upload products.</p>';
+                return;
+            }
+            
+            // Sort products by ID in descending order to show latest first
+            const sortedProducts = [...products].sort((a, b) => b.id - a.id);
+            
+            // Take only the first 10 products (latest)
+            const latestProducts = sortedProducts.slice(0, 10);
+            
+            let productsHTML = '';
+            
+            latestProducts.forEach(product => {
+                // Convert price to RWF
+                const priceInRwf = (product.price * 1200).toFixed(0);
+                productsHTML += `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p>Category: ${product.category}</p>
+                            <p class="price">${priceInRwf} RWF</p>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            latestProductsContainer.innerHTML = productsHTML;
+        }
+        
+        // Update category counts
+        function updateCategoryCounts() {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            // Count products by category
+            const categoryCounts = {
+                electronics: 0,
+                clothes: 0,
+                shoes: 0,
+                toys: 0,
+                secondhand: 0
+            };
+            
+            products.forEach(product => {
+                if (categoryCounts.hasOwnProperty(product.category)) {
+                    categoryCounts[product.category]++;
+                }
+            });
+            
+            // Update the UI with counts
+            for (const category in categoryCounts) {
+                const countElement = document.getElementById(`${category}-count`);
+                if (countElement) {
+                    countElement.textContent = `${categoryCounts[category]} products`;
+                }
+            }
+        }
+        
+        // Add to cart function for this page
+        function addToCart(productId) {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                // Get cart from localStorage
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                // Add product to cart
+                cart.push(product);
+                
+                // Save cart to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart count in header
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = cart.length;
+                }
+                
+                // Show confirmation message
+                alert(`${product.name} added to cart!`);
+            }
+        }
+        
+        // Update cart count, category counts, and latest products on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            updateCategoryCounts();
+            displayLatestProducts();
+        });
+    </script>
+</body>
+</html>

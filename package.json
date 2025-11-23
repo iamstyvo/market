@@ -1,0 +1,16 @@
+{
+  "name": "inzozi-shop",
+  "version": "1.0.0",
+  "description": "Inzozi Shop - An online marketplace",
+  "scripts": {
+    "start": "serve -p 8000",
+    "server": "node server/server.js",
+    "dev-server": "nodemon server/server.js"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}

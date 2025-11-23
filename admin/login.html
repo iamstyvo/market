@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Inzozi Shop</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="login.html">Admin</a></li>
+                    <li><a href="../cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Inzozi Shop Admin Panel</h2>
+            <p>Secure access for authorized personnel only</p>
+        </section>
+
+        <section class="login-container">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <button type="button" class="btn" onclick="adminLogin()">Login</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: #7f8c8d;">Note: This section is for authorized administrators only.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

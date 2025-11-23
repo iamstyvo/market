@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed - Inzozi Shop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin/login.html">Admin</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Payment Failed</h2>
+            <p>Sorry, your payment could not be processed</p>
+        </section>
+
+        <section class="cart-container">
+            <div style="text-align: center; padding: 40px 20px;">
+                <div style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;">✗</div>
+                <h2 style="color: #e74c3c;">Payment Failed</h2>
+                <p style="font-size: 1.2rem; margin: 20px 0;">We're sorry, but your payment could not be processed at this time.</p>
+                <p style="font-size: 1rem; color: #7f8c8d;">Please try again or contact customer support if the problem persists.</p>
+                
+                <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 30px 0; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <h3>Error Details</h3>
+                    <div id="error-details">
+                        <p>Error Code: <span id="error-code">PAYMENT_FAILED</span></p>
+                        <p>Message: <span id="error-message">Payment processing error</span></p>
+                        <p>Timestamp: <span id="error-timestamp"></span></p>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <button class="btn" onclick="window.location.href='cart.html'" style="margin: 10px;">Return to Cart</button>
+                    <button class="checkout-btn" onclick="window.location.href='buy.html'" style="margin: 10px; background: linear-gradient(90deg, #3498db, #2980b9);">Try Payment Again</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script>
+        // Update error details
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update cart count
+            updateCartCount();
+            
+            // Get error details from URL parameters (if available)
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorCode = urlParams.get('code') || 'PAYMENT_FAILED';
+            const errorMessage = urlParams.get('message') || 'Payment processing error';
+            
+            // Update the error details
+            document.getElementById('error-code').textContent = errorCode;
+            document.getElementById('error-message').textContent = errorMessage;
+            document.getElementById('error-timestamp').textContent = new Date().toLocaleString();
+        });
+        
+        // Update cart count function
+        function updateCartCount() {
+            // Get cart from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+    </script>
+</body>
+</html>

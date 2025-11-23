@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Inzozi Shop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+               
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin/login.html">Admin</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Your Inzozi Shop Cart</h2>
+            <p>Review your selected items before checkout</p>
+        </section>
+
+        <section class="cart-container">
+            <h2>Shopping Cart</h2>
+            <div id="cart-items">
+                <!-- Cart items will be loaded here by JavaScript -->
+            </div>
+            <div class="total">
+                Total: <span id="total">0 RWF</span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Render cart items when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCartItems();
+        });
+        
+        // Render cart items
+        function renderCartItems() {
+            // Get cart from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.getElementById('cart-items');
+            const totalElement = document.getElementById('total');
+            
+            if (!cartContainer) return;
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p>Your cart is empty</p>';
+                if (totalElement) totalElement.textContent = '0 RWF';
+                return;
+            }
+            
+            let total = 0;
+            let cartHTML = '';
+            
+            cart.forEach((item, index) => {
+                total += item.price;
+                // Convert price to RWF
+                const priceInRwf = (item.price * 1200).toFixed(0);
+                cartHTML += `
+                    <div class="cart-item">
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <p class="item-price">${priceInRwf} RWF</p>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${index})">Remove</button>
+                    </div>
+                `;
+            });
+            
+            cartContainer.innerHTML = cartHTML;
+            
+            if (totalElement) {
+                // Convert total to RWF
+                const totalInRwf = (total * 1200).toFixed(0);
+                totalElement.textContent = `${totalInRwf} RWF`;
+            }
+        }
+        
+        // Remove item from cart
+        function removeFromCart(index) {
+            // Get cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Remove item at index
+            cart.splice(index, 1);
+            
+            // Save updated cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count in header
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+            
+            // Re-render cart
+            renderCartItems();
+        }
+        
+        // Proceed to checkout
+        function proceedToCheckout() {
+            // Get cart from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add some products first!');
+                return;
+            }
+            
+            window.location.href = 'buy.html';
+        }
+        
+        // Update cart count in header
+        function updateCartCount() {
+            // Get cart from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+        
+        // Update cart count when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

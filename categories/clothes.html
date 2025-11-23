@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothes - Inzozi Shop</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+             
+                <h1>Inzozi Shop</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../admin/login.html">Admin</a></li>
+                    <li><a href="../cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>👕 Clothes</h2>
+            <p>Discover our latest fashion collection</p>
+        </section>
+
+        <section class="products">
+            <div class="container">
+                <h2>Clothes Collection</h2>
+                <div id="product-grid" class="product-grid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Inzozi Shop. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">Your trusted online marketplace for quality products</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        // Display clothes products when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            // Filter for clothes products
+            const categoryProducts = products.filter(product => product.category === 'clothes');
+            
+            const productGrid = document.getElementById('product-grid');
+            
+            if (categoryProducts.length === 0) {
+                productGrid.innerHTML = '<p>No products in this category</p>';
+                return;
+            }
+            
+            let productsHTML = '';
+            
+            categoryProducts.forEach(product => {
+                // Convert price to RWF (using conversion rate from script.js)
+                const priceInRwf = (product.price * 1200).toFixed(0);
+                productsHTML += `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p class="price">${priceInRwf} RWF</p>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            productGrid.innerHTML = productsHTML;
+            
+            // Update cart count
+            updateCartCount();
+        });
+        
+        // Add to cart function for this page
+        function addToCart(productId) {
+            // Refresh products from localStorage
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                // Get cart from localStorage
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                // Add product to cart
+                cart.push(product);
+                
+                // Save cart to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart count in header
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = cart.length;
+                }
+                
+                // Show confirmation message
+                alert(`${product.name} added to cart!`);
+            }
+        }
+        
+        // Update cart count function
+        function updateCartCount() {
+            // Get cart from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+    </script>
+</body>
+</html>
