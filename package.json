@@ -5,7 +5,8 @@
   "scripts": {
     "start": "serve -p 8000",
     "server": "node server/server.js",
-    "dev-server": "nodemon server/server.js"
+    "dev-server": "nodemon server/server.js",
+    "postinstall": "npm install --omit=dev"
   },
   "dependencies": {
     "serve": "^14.2.0"
